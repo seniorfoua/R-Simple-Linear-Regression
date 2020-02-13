@@ -1,0 +1,36 @@
+
+Full R code
+
+> data<-read.table("C:/Users/Kathie/Desktop/Last Semester 2020/Applied Predictive Analytics/APCuv.txt", header = TRUE)
+> set.seed(19)
+> R=runif(nrow(data))
+> data$R=R
+> data$type<-ifelse(data$R<=.6,"train","test")
+> train<-data[data$type=="train",]
+> test<-data[data$type=="test",]
+> regmodel<-lm(Log10APC~UV,data=train)
+> summary(regmodel)
+
+Call:
+lm(formula = Log10APC ~ UV, data = train)
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.1662 -0.4515 -0.1176  0.4161  1.8021 
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   1.4727     0.2506   5.877 3.01e-07 ***
+UV            9.7026     1.5563   6.234 8.20e-08 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Residual standard error: 0.7049 on 52 degrees of freedom
+Multiple R-squared:  0.4277, Adjusted R-squared:  0.4167 
+F-statistic: 38.87 on 1 and 52 DF,  p-value: 8.196e-08
+
+> resids<-resid(regmodel)
+> plot(resids)
+> abline(0,0)
+ > plot(train$UV,train$Log10APC)
+> abline(regmodel)
+> pred_interval<-predict(regmodel,newdata = train,interval = "prediction",level=0.95)
+> lines(train$UV,pred_interval[,2])
+> lines(train$UV,pred_interval[,3])
